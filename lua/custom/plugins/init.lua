@@ -56,7 +56,7 @@ return {
           concealcursor = 'nvic',
         },
         -- Send deleted files to the trash instead of permanently deleting them (:help oil-trash)
-        delete_to_trash = false,
+        delete_to_trash = true,
         -- Skip the confirmation popup for simple operations (:help oil.skip_confirm_for_simple_edits)
         skip_confirm_for_simple_edits = false,
         -- Selecting a new/moved/renamed file or directory will prompt you to save changes first
@@ -79,7 +79,7 @@ return {
         -- Set to `false` to disable, or "name" to keep it on the file names
         constrain_cursor = 'editable',
         -- Set to true to watch the filesystem for changes and reload oil
-        watch_for_changes = false,
+        watch_for_changes = true,
         -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
         -- options with a `callback` (e.g. { callback = function() ... end, desc = "", mode = "n" })
         -- Additionally, if it is a string that matches "actions.<name>",
@@ -108,7 +108,7 @@ return {
         use_default_keymaps = true,
         view_options = {
           -- Show files and directories that start with "."
-          show_hidden = false,
+          show_hidden = true,
           -- This function defines what is considered a "hidden" file
           is_hidden_file = function(name, bufnr)
             local m = name:match '^%.'
@@ -219,6 +219,30 @@ return {
       }
 
       vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open [E]xplorer' })
+    end,
+  },
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+
+      -- REQUIRED
+      harpoon:setup()
+      -- REQUIRED
+
+      vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end)
+      vim.keymap.set('n', '<C-e>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+      vim.keymap.set('n', '<C-h>', function() harpoon:list():select(1) end)
+      vim.keymap.set('n', '<C-t>', function() harpoon:list():select(2) end)
+      vim.keymap.set('n', '<C-n>', function() harpoon:list():select(3) end)
+      vim.keymap.set('n', '<C-s>', function() harpoon:list():select(4) end)
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set('n', '<C-S-P>', function() harpoon:list():prev() end)
+      vim.keymap.set('n', '<C-S-N>', function() harpoon:list():next() end)
     end,
   },
 }
